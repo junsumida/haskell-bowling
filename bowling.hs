@@ -1,22 +1,22 @@
-result_perfect   = "XXXXXXXXXXXX"
-result_nums_only = "9-7-4-5-6-2-3-5-7-9-" 
-result_nums_spare = "9/7/4/5-6-2-3-5-7-9-" 
+-- for digitToInt
+import Data.Char
 
-score (x:y:z:xs) 
+score all@(x:y:xs)
+  | length all < 3 = numOrGtr x y '0'
+score all@(x:y:z:xs) 
   | xs == [] && x == 'X' = strike x y z
-  | xs == [] && x /= 'X' = numOrGtr x y z
   | x == 'X' = strike x y z + score (y:z:xs) 
-  | x /= 'X' = numOrGtr x y z + score xs
+  | x /= 'X' = numOrGtr x y z + score (z:xs)
 
-resToNum x
+chToNum x
   | x == '-'  = 0 :: Int
   | x == 'X'  = 10 :: Int
   | otherwise = digitToInt x
 
 numOrGtr x y z
-  | y == '/'  = 10 + resToNum z
-  | otherwise = resToNum x + resToNum y
+  | y == '/'  = 10 + chToNum z
+  | otherwise = chToNum x + chToNum y
 
 strike x y z
   | z == '/'  = 20 :: Int 
-  | otherwise = 10 + resToNum y + resToNum z
+  | otherwise = 10 + chToNum y + chToNum z
